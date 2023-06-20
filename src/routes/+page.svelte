@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Icon from '@iconify/svelte';
+
 	const BLOCK_SIZE = 24;
 	const GROUP_SIZE = 6;
 	const BASE64_TABLE_BINARY = [
@@ -151,6 +153,8 @@
 		return BASE64_TABLE_CHAR[table_index];
 	}
 
+	// Alternatively use the built-in btoa() function
+	// But why do that when you can reiplement a worse version
 	function base64encode(plain_text: string) {
 		let binary = str2bin(plain_text);
 		let sequester_count = 0;
@@ -186,28 +190,108 @@
 		return result;
 	}
 
-	// event type event: Event & { currentTarget: EventTarget & HTMLInputElement } why?
+	function clear_text() {}
+
+	function copy_text() {}
+
+	// event type is event: Event & { currentTarget: EventTarget & HTMLInputElement } why?
 	function update() {
 		let result = base64encode(plain_text);
 		cipher_text = result;
 	}
 </script>
 
-<h1>Base 64 Encoder</h1>
-<div>
-	<div>
-		<input bind:value={plain_text} on:input={update} type="text" />
-		<button>Delete</button>
-	</div>
+<div
+	class="container"
+	style="
+    background-image: url('/background.jpg'); 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    background-size: cover;
+  "
+>
+	<div class="card">
+		<h1 class="header">Base 64 Encoder</h1>
+		<div class="form_group">
+			<textarea bind:value={plain_text} on:input={update} rows="6" />
+			<button on:click={clear_text} class="btn_delete"
+				><Icon icon="basil:trash-outline" color="black" width="32" /></button
+			>
+		</div>
 
-	<div>
-		<input bind:value={cipher_text} type="text" disabled />
-		<button>Copy</button>
+		<div class="form_group">
+			<textarea bind:value={cipher_text} rows="6" readonly />
+			<button on:click={copy_text} class="btn_delete"
+				><Icon icon="basil:copy-outline" color="black" width="28" /></button
+			>
+		</div>
 	</div>
 </div>
 
 <style>
-	input {
-		width: 20rem;
+	@font-face {
+		font-family: 'Grotley';
+		font-style: normal;
+		font-weight: 400;
+		src: url('/Grotley.otf');
+	}
+	.header {
+		font-family: Grotley, serif;
+	}
+
+	.btn_delete {
+		cursor: pointer;
+		position: absolute;
+		right: 0;
+		top: 0;
+		transform: translate(-20%, 20%);
+		border-radius: 10px;
+		border: none;
+		background-color: pink;
+		width: 40px;
+		aspect-ratio: 1;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.form_group {
+		width: 40%;
+		max-width: 100%;
+		position: relative;
+		margin: 20px 0px;
+	}
+
+	textarea {
+		resize: none;
+		width: 100%;
+		padding: 12px 60px 12px 20px;
+		box-sizing: border-box;
+		border: none;
+		border-bottom: 6px solid pink;
+		border-radius: 15px;
+		font-family: sans-serif;
+		font-size: large;
+		vertical-align: text-top;
+	}
+
+	textarea:focus {
+		outline: none;
+		background-color: hsl(350, 100%, 98%);
+	}
+	.container {
+		height: 100vh;
+	}
+
+	.card {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+
+		backdrop-filter: blur(12px);
 	}
 </style>
