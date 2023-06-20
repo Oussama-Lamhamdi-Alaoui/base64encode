@@ -138,6 +138,7 @@
 
 	let plain_text = '';
 	let cipher_text = '';
+	let input_textarea: HTMLTextAreaElement;
 
 	function str2bin(text: string) {
 		let binary = '';
@@ -190,9 +191,15 @@
 		return result;
 	}
 
-	function clear_text() {}
+	function clear_text() {
+		plain_text = '';
+		cipher_text = '';
+		input_textarea.select();
+	}
 
-	function copy_text() {}
+	function copy_text() {
+		navigator.clipboard.writeText(cipher_text);
+	}
 
 	// event type is event: Event & { currentTarget: EventTarget & HTMLInputElement } why?
 	function update() {
@@ -213,7 +220,7 @@
 	<div class="card">
 		<h1 class="header">Base 64 Encoder</h1>
 		<div class="form_group">
-			<textarea bind:value={plain_text} on:input={update} rows="6" />
+			<textarea bind:value={plain_text} bind:this={input_textarea} on:input={update} rows="6" />
 			<button on:click={clear_text} class="btn_delete"
 				><Icon icon="basil:trash-outline" color="black" width="32" /></button
 			>
